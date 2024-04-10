@@ -24,22 +24,28 @@ def save(request):
         testmodel.save()
         return HttpResponseRedirect('/') 
     else:
-        print("error")
+        return HttpResponse(print('error'))
 
 def delUser(request):
     if request.method == 'POST':
-        testmodel = TestModel.objects.get(id = request.POST.get('id'))
-        testmodel.delete()
-        return HttpResponseRedirect('/') 
+        if TestModel.objects.filter(id = request.POST.get('id')).exists():
+            testmodel = TestModel.objects.get(id = request.POST.get('id'))
+            testmodel.delete()
+            return HttpResponseRedirect('/') 
+        else:
+            return HttpResponse(print('error'))
     else:
-        print("error")
+        return HttpResponse(print('error'))
 
 def update(request):
     if request.method == 'POST':
-        testmodel = TestModel.objects.get(id = request.POST.get('id'))
-        testmodel.firstname = request.POST.get('fname')
-        testmodel.lastname = request.POST.get('lname')
-        testmodel.save()
-        return HttpResponseRedirect('/')
+        if TestModel.objects.filter(id = request.POST.get('id')).exists():
+            testmodel = TestModel.objects.get(id = request.POST.get('id'))
+            testmodel.firstname = request.POST.get('fname')
+            testmodel.lastname = request.POST.get('lname')
+            testmodel.save()
+            return HttpResponseRedirect('/')
+        else:
+            return HttpResponse(print(request))
     else:
-        print("error")
+        return HttpResponse(print('error'))
