@@ -1,6 +1,6 @@
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import TestModel
+from .models import TestModel, user_login
 
 # Create your views here.
 def home(request):
@@ -49,3 +49,21 @@ def update(request):
             return HttpResponse(print(request))
     else:
         return HttpResponse(print('error'))
+    
+def login(request):
+    template = loader.get_template('login.html')
+    context={}
+    return HttpResponse(template.render(context, request))
+
+def login_user(request):
+    if request.method == 'POST':
+        usn = request.POST.get('usn')
+        pw = request.POST.get('pw')
+        logcheck = user_login.objects.get(username = request.POST.get('usn'))
+        if logcheck.username == usn:
+            if logcheck.password == pw:
+                return HttpResponseRedirect('/')
+            else:
+                return HttpResponseRedirect('/login')
+        else:
+                return HttpResponseRedirect('/login')
